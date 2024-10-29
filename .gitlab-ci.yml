@@ -1,0 +1,31 @@
+stages:
+  - docker-compose-up
+  - docker-compose-down
+
+docker-compose-up:
+  tags:
+    - docker-socket-binding
+  stage: docker-compose-up
+  when: manual
+  image: docker:24.0.5
+  variables:
+    GF_SECURITY_ADMIN_PASSWORD: $GF_SECURITY_ADMIN_PASSWORD
+    POSTGRES_USER: $POSTGRES_USER
+    POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+    POSTGRES_DB: $POSTGRES_DB
+  before_script:
+    - export GF_SECURITY_ADMIN_PASSWORD=$GF_SECURITY_ADMIN_PASSWORD
+    - export POSTGRES_USER=$POSTGRES_USER
+    - export POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+    - export POSTGRES_DB=$POSTGRES_DB
+  script:
+    - docker-compose up -d
+
+docker-compose-down:
+  tags:
+    - docker-socket-binding
+  stage: docker-compose-down
+  when: manual
+  image: docker:24.0.5
+  script:
+    - docker-compose down
